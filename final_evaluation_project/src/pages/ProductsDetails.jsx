@@ -12,7 +12,7 @@ const ProductsDetails = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const toast = useToast();
 
-  const fetchProductDetails = async ( productId) => {
+  const fetchProductDetails = async (productId) => {
     setLoading(true);
     try {
       const response = await axios.get(`https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-products/${productId}`);
