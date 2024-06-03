@@ -1,23 +1,33 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Button, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  useToast,
+} from "@chakra-ui/react";
 import axios from "axios";
 import LoadingIndicator from "../components/LoadingIndictor";
 import ErrorIndictor from "../components/ErrorIndictor";
 const ProductsDetails = () => {
-  const { productId } = useParams();
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [productDetails, setProductDetails] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const toast = useToast();
 
-  const fetchProductDetails = async (productId) => {
+  const fetchProductDetails = async (id) => {
     setLoading(true);
+    setError(false);
     try {
-      const response = await axios.get(`https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-products/${productId}`);
-      const data = response.data;
-      setProductDetails(data);
+      const response = await axios.get(`https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-products/${id}`);
+      setProductDetails(response.data.data);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -26,8 +36,8 @@ const ProductsDetails = () => {
   };
 
   useEffect(() => {
-    fetchProductDetails(productId);
-  }, [productId]);
+    fetchProductDetails(id);
+  }, [id]);
 
   const handleAddToCart = () => {
     setIsDialogOpen(true);
@@ -75,19 +85,20 @@ const ProductsDetails = () => {
       )}
 
       <AlertDialog isOpen={isDialogOpen} onClose={handleCancel}>
-        <AlertDialogOverlay />
-        <AlertDialogContent>
-          <AlertDialogHeader>Add to Cart</AlertDialogHeader>
-          <AlertDialogBody>
-            Are you sure you want to add this item to cart?
-          </AlertDialogBody>
-          <AlertDialogFooter>
-            <Button onClick={handleCancel}>Cancel</Button>
-            <Button colorScheme="teal" onClick={handleConfirm} ml={3}>
-              Confirm
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader>Add to Cart</AlertDialogHeader>
+            <AlertDialogBody>
+              Are you sure you want to add this item to cart?
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button onClick={handleCancel}>Cancel</Button>
+              <Button colorScheme="teal" onClick={handleConfirm} ml={3}>
+                Confirm
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
       </AlertDialog>
     </Box>
   );
